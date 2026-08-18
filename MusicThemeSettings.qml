@@ -6,13 +6,6 @@ import qs.Modules.Plugins
 PluginSettings {
     pluginId: "musicTheme"
 
-    ToggleSetting {
-        settingKey: "enabled"
-        label: "Enable Music Theming"
-        description: "Apply the album art accent color as the system theme while music plays"
-        defaultValue: true
-    }
-
     SelectionSetting {
         settingKey: "debounceMs"
         label: "Update Delay"

@@ -8,12 +8,15 @@ Item {
     property var pluginService: null
     property string pluginId: "musicTheme"
 
-    property bool enabled: pluginService ? pluginService.loadPluginData(pluginId, "enabled", true) : true
     property int debounceMs: pluginService ? Number(pluginService.loadPluginData(pluginId, "debounceMs", 250)) : 250
     property string schemeSetting: pluginService ? pluginService.loadPluginData(pluginId, "matugenScheme", "system") : "system"
 
     property string _lastAppliedHex: ""
-    property bool _wallpaperThemeActive: true
+    readonly property bool _wallpaperThemeActive: _lastAppliedHex === ""
+
+    function _setDesired(kind, value) {
+        Theme.setDesiredTheme(kind, value, root._isLight(), root._iconTheme(), root._matugenType());
+    }
 
     function _colorToHex(c) {
         const r = Math.round(c.r * 255).toString(16).padStart(2, "0");
@@ -37,8 +40,6 @@ Item {
     }
 
     function applyAccent() {
-        if (!root.enabled)
-            return;
         if (!MprisController.activePlayer || !MprisController.activePlayer.isPlaying)
             return;
         if (!MediaAccentService.hasAccent)
@@ -49,8 +50,7 @@ Item {
             return;
 
         root._lastAppliedHex = hex;
-        root._wallpaperThemeActive = false;
-        Theme.setDesiredTheme("hex", hex, root._isLight(), root._iconTheme(), root._matugenType());
+        root._setDesired("hex", hex);
     }
 
     function restoreWallpaperTheme() {
@@ -59,11 +59,10 @@ Item {
         if (!Theme.rawWallpaperPath)
             return;
 
-        root._wallpaperThemeActive = true;
         root._lastAppliedHex = "";
 
         const kind = Theme.rawWallpaperPath.startsWith("#") ? "hex" : "image";
-        Theme.setDesiredTheme(kind, Theme.rawWallpaperPath, root._isLight(), root._iconTheme(), root._matugenType());
+        root._setDesired(kind, Theme.rawWallpaperPath);
     }
 
     Timer {
@@ -71,18 +70,6 @@ Item {
         interval: root.debounceMs
         repeat: false
         onTriggered: root.applyAccent()
-    }
-
-    Timer {
-        id: stopWatchTimer
-        interval: 2000
-        repeat: true
-        running: true
-        onTriggered: {
-            const playing = MprisController.activePlayer && MprisController.activePlayer.isPlaying;
-            if (!playing)
-                root.restoreWallpaperTheme();
-        }
     }
 
     Connections {
@@ -95,7 +82,18 @@ Item {
     Connections {
         target: MprisController
         function onActivePlayerChanged() {
-            root.applyAccent();
+            debounceTimer.restart();
+        }
+    }
+
+    Connections {
+        target: MprisController.activePlayer
+        ignoreUnknownSignals: true
+        function onIsPlayingChanged() {
+            if (MprisController.activePlayer && MprisController.activePlayer.isPlaying)
+                debounceTimer.restart();
+            else
+                root.restoreWallpaperTheme();
         }
     }
 
@@ -104,14 +102,10 @@ Item {
         function onPluginDataChanged(changedPluginId) {
             if (changedPluginId !== root.pluginId)
                 return;
-            const wasEnabled = root.enabled;
             const previousScheme = root.schemeSetting;
-            root.enabled = root.pluginService.loadPluginData(root.pluginId, "enabled", true);
             root.debounceMs = Number(root.pluginService.loadPluginData(root.pluginId, "debounceMs", 250));
             root.schemeSetting = root.pluginService.loadPluginData(root.pluginId, "matugenScheme", "system");
-            if (!root.enabled) {
-                root.restoreWallpaperTheme();
-            } else if (!wasEnabled || root.schemeSetting !== previousScheme) {
+            if (root.schemeSetting !== previousScheme) {
                 root._lastAppliedHex = "";
                 root.applyAccent();
             }
@@ -119,9 +113,8 @@ Item {
     }
 
     Component.onCompleted: {
-        console.info("MusicTheme: daemon started, enabled =", root.enabled);
-        if (root.enabled)
-            root.applyAccent();
+        console.info("MusicTheme: daemon started");
+        root.applyAccent();
     }
 
     Component.onDestruction: {
