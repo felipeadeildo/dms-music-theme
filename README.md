@@ -2,20 +2,29 @@
 
 A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin that themes your system (GTK, Qt, terminals, editors) from the album art of the track currently playing, without touching your wallpaper.
 
-<p align="center">
-  <img src="assets/screenshot-1.png" width="45%" alt="Theme matching a purple album cover">
+<div align="center">
+  <img src="assets/screenshot.png" alt="Music Theme plugin in DMS Settings">
+</div>
+
+<details>
+<summary>More screenshots</summary>
+<br>
+<div align="center">
   <img src="assets/screenshot-2.png" width="45%" alt="Theme matching a blue album cover">
-</p>
+  <img src="assets/screenshot-3.png" width="45%" alt="Theme matching a purple album cover">
+  <br>
+  <img src="assets/screenshot-4.png" width="45%" alt="Theme matching another blue album cover">
+</div>
+</details>
 
 ## Features
 
 - Retints the system theme using the accent color already extracted from the playing track's album art
 - Uses DMS's own matugen pipeline, so every existing template (GTK, Qt, terminals, Neovim, VSCode, Firefox/Zen) updates automatically
-- Never modifies your wallpaper file; `dms ipc call wallpaper get` keeps returning your real wallpaper the whole time
+- Never modifies your wallpaper file
 - Reverts to your wallpaper theme automatically when playback stops or the plugin is disabled
 - No `playerctl` or Python dependency; reads MPRIS and album art natively through DMS
 - Configurable palette (Tonal Spot, Vibrant, Expressive, and the rest of the matugen schemes), or follow your system default
-- Skips low-saturation album art (black & white covers) to avoid muddy themes
 
 ## Requirements
 
@@ -24,8 +33,6 @@ A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin t
 - A media player exposing MPRIS with album art (Spotify, browsers, mpv, etc.)
 
 ## Installation
-
-### Manual
 
 ```bash
 git clone https://github.com/felipeadeildo/dms-music-theme.git \
@@ -39,20 +46,8 @@ git clone https://github.com/felipeadeildo/dms-music-theme.git \
 
 ## Configuration
 
-Settings available in plugin settings:
-
-- **Enable Music Theming**: master on/off toggle (default: enabled)
-- **Update Delay**: how long to let the album art color settle before retheming (default: `250ms`)
-- **Palette**: matugen scheme used to build the full palette from the accent color (default: follow system setting)
-
-## How it works
-
-DMS already computes a live accent color from the playing track's album art (used to color the media player popup). This plugin watches that color and, whenever it changes, calls the same internal function DMS uses when you pick a wallpaper, passing the album art color instead of an image path. Since DMS already treats color sources as either an image or a raw hex value, no wallpaper file is ever created or swapped.
-
-```
-music plays -> accent color changes -> theme retinted from that color
-music stops -> theme reverts to the one generated from your wallpaper
-```
+- **Update Delay**: how long to let the album art color settle before retheming
+- **Palette**: matugen scheme used to build the full palette from the accent color
 
 ## License
 
