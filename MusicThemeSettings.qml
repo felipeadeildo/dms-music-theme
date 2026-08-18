@@ -6,14 +6,6 @@ import qs.Modules.Plugins
 PluginSettings {
     pluginId: "musicTheme"
 
-    StyledText {
-        width: parent.width
-        text: "Retints GTK/Qt/terminal colors to match the currently playing track's album art, using the same matugen pipeline as wallpaper theming. Your wallpaper file is never changed; the theme reverts automatically when playback stops."
-        font.pixelSize: Theme.fontSizeSmall
-        color: Theme.surfaceVariantText
-        wrapMode: Text.WordWrap
-    }
-
     ToggleSetting {
         settingKey: "enabled"
         label: "Enable Music Theming"
@@ -24,12 +16,31 @@ PluginSettings {
     SelectionSetting {
         settingKey: "debounceMs"
         label: "Update Delay"
-        description: "How long to wait after a track/color change before retheming"
+        description: "How long to wait for the album art color to settle before retheming"
         options: [
-            {label: "Fast (600ms)", value: "600"},
-            {label: "Normal (1200ms)", value: "1200"},
-            {label: "Slow (2500ms)", value: "2500"}
+            {label: "Fast (100ms)", value: "100"},
+            {label: "Normal (250ms)", value: "250"},
+            {label: "Slow (600ms)", value: "600"}
         ]
-        defaultValue: "1200"
+        defaultValue: "250"
+    }
+
+    SelectionSetting {
+        settingKey: "matugenScheme"
+        label: "Palette"
+        description: "Matugen scheme used to turn the album art color into a full palette"
+        options: [
+            {label: "Follow system setting", value: "system"},
+            {label: "Tonal Spot", value: "scheme-tonal-spot"},
+            {label: "Vibrant", value: "scheme-vibrant"},
+            {label: "Content", value: "scheme-content"},
+            {label: "Expressive", value: "scheme-expressive"},
+            {label: "Fidelity", value: "scheme-fidelity"},
+            {label: "Fruit Salad", value: "scheme-fruit-salad"},
+            {label: "Monochrome", value: "scheme-monochrome"},
+            {label: "Neutral", value: "scheme-neutral"},
+            {label: "Rainbow", value: "scheme-rainbow"}
+        ]
+        defaultValue: "system"
     }
 }

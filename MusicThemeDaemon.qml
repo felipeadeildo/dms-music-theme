@@ -10,7 +10,8 @@ Item {
 
     property bool enabled: pluginService ? pluginService.loadPluginData(pluginId, "enabled", true) : true
     property real minSaturation: pluginService ? pluginService.loadPluginData(pluginId, "minSaturation", 0.18) : 0.18
-    property int debounceMs: pluginService ? Number(pluginService.loadPluginData(pluginId, "debounceMs", 1200)) : 1200
+    property int debounceMs: pluginService ? Number(pluginService.loadPluginData(pluginId, "debounceMs", 250)) : 250
+    property string schemeSetting: pluginService ? pluginService.loadPluginData(pluginId, "matugenScheme", "system") : "system"
 
     property string _lastAppliedHex: ""
     property bool _wallpaperThemeActive: true
@@ -27,6 +28,8 @@ Item {
     }
 
     function _matugenType() {
+        if (root.schemeSetting && root.schemeSetting !== "system")
+            return root.schemeSetting;
         return (typeof SettingsData !== "undefined" && SettingsData.matugenScheme) ? SettingsData.matugenScheme : "scheme-tonal-spot";
     }
 
@@ -97,7 +100,7 @@ Item {
     Connections {
         target: MprisController
         function onActivePlayerChanged() {
-            debounceTimer.restart();
+            root.applyAccent();
         }
     }
 
@@ -106,15 +109,24 @@ Item {
         function onPluginDataChanged(changedPluginId) {
             if (changedPluginId !== root.pluginId)
                 return;
+            const wasEnabled = root.enabled;
+            const previousScheme = root.schemeSetting;
             root.enabled = root.pluginService.loadPluginData(root.pluginId, "enabled", true);
-            root.debounceMs = Number(root.pluginService.loadPluginData(root.pluginId, "debounceMs", 1200));
-            if (!root.enabled)
+            root.debounceMs = Number(root.pluginService.loadPluginData(root.pluginId, "debounceMs", 250));
+            root.schemeSetting = root.pluginService.loadPluginData(root.pluginId, "matugenScheme", "system");
+            if (!root.enabled) {
                 root.restoreWallpaperTheme();
+            } else if (!wasEnabled || root.schemeSetting !== previousScheme) {
+                root._lastAppliedHex = "";
+                root.applyAccent();
+            }
         }
     }
 
     Component.onCompleted: {
         console.info("MusicTheme: daemon started, enabled =", root.enabled);
+        if (root.enabled)
+            root.applyAccent();
     }
 
     Component.onDestruction: {

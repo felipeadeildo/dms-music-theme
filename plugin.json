@@ -1,7 +1,7 @@
 {
     "id": "musicTheme",
     "name": "Music Theme",
-    "description": "Retints the system theme (GTK/Qt/terminals) to match the currently playing track's album art accent color via matugen, without touching your wallpaper. Restores the wallpaper-based theme when playback stops.",
+    "description": "Themes your system from the currently playing album art",
     "version": "1.0.0",
     "author": "felipeadeildo",
     "type": "daemon",
