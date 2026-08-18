@@ -2,6 +2,11 @@
 
 A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin that themes your system (GTK, Qt, terminals, editors) from the album art of the track currently playing, without touching your wallpaper.
 
+<p align="center">
+  <img src="assets/screenshot-1.png" width="45%" alt="Theme matching a purple album cover">
+  <img src="assets/screenshot-2.png" width="45%" alt="Theme matching a blue album cover">
+</p>
+
 ## Features
 
 - Retints the system theme using the accent color already extracted from the playing track's album art
