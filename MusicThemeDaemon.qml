@@ -9,7 +9,6 @@ Item {
     property string pluginId: "musicTheme"
 
     property bool enabled: pluginService ? pluginService.loadPluginData(pluginId, "enabled", true) : true
-    property real minSaturation: pluginService ? pluginService.loadPluginData(pluginId, "minSaturation", 0.18) : 0.18
     property int debounceMs: pluginService ? Number(pluginService.loadPluginData(pluginId, "debounceMs", 250)) : 250
     property string schemeSetting: pluginService ? pluginService.loadPluginData(pluginId, "matugenScheme", "system") : "system"
 
@@ -45,11 +44,7 @@ Item {
         if (!MediaAccentService.hasAccent)
             return;
 
-        const c = MediaAccentService.accent;
-        if (c.hsvSaturation < root.minSaturation)
-            return;
-
-        const hex = root._colorToHex(c);
+        const hex = root._colorToHex(MediaAccentService.accent);
         if (hex === root._lastAppliedHex)
             return;
 
