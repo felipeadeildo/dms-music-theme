@@ -2,7 +2,7 @@
     "id": "musicTheme",
     "name": "Music Theme",
     "description": "Themes your system from the currently playing album art",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "author": "felipeadeildo",
     "type": "daemon",
     "capabilities": ["daemon", "theming"],
