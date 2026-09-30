@@ -6,6 +6,19 @@ import qs.Modules.Plugins
 PluginSettings {
     pluginId: "musicTheme"
 
+    Requirements {
+        id: requirements
+    }
+
+    StyledText {
+        width: parent.width
+        visible: !requirements.met
+        text: requirements.problem
+        color: Theme.error
+        font.pixelSize: Theme.fontSizeMedium
+        wrapMode: Text.WordWrap
+    }
+
     SelectionSetting {
         settingKey: "debounceMs"
         label: "Update Delay"
