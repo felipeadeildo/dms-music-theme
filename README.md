@@ -1,6 +1,6 @@
 # Music Theme
 
-A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin that themes your system (GTK, Qt, terminals, editors) from the album art of the track currently playing, without touching your wallpaper.
+A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin that themes your system (the shell, GTK, Qt, terminals, editors) from the album art of the track currently playing, without touching your wallpaper.
 
 <div align="center">
   <img src="assets/screenshot.png" alt="Music Theme plugin in DMS Settings">
@@ -19,18 +19,21 @@ A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin t
 
 ## Features
 
-- Retints the system theme using the accent color already extracted from the playing track's album art
-- Uses DMS's own matugen pipeline, so every existing template (GTK, Qt, terminals, Neovim, VSCode, Firefox/Zen) updates automatically
-- Never modifies your wallpaper file
-- Reverts to your wallpaper theme automatically when playback stops or the plugin is disabled
-- No `playerctl` or Python dependency; reads MPRIS and album art natively through DMS
-- Configurable palette (Tonal Spot, Vibrant, Expressive, and the rest of the matugen schemes), or follow your system default
+- Reseeds the Dynamic theme from the accent DMS extracts from the playing track's album art
+- Goes through DMS's own matugen pipeline, so the shell and every template (GTK, Qt, terminals, Neovim, VSCode, Firefox/Zen) follow the track
+- Puts the album art color back when DMS regenerates the theme mid-track (wallpaper change, light/dark toggle, scheme change)
+- Hands the theme back to DMS when playback stops, the player closes or the plugin is disabled
+- Reads MPRIS and album art through DMS, with no `playerctl` or Python
 
 ## Requirements
 
-- DMS >= 1.5.0
-- matugen enabled (default; disable with `DMS_DISABLE_MATUGEN=1`)
+- DMS >= 1.5.0 with matugen available. It is on unless you set `DMS_DISABLE_MATUGEN=1`.
+- The Dynamic theme selected in DMS
+- "Use album art accent" turned on in the DMS media player options, on DMS versions that have it
+- Derived color set to "From wallpaper" on DMS builds that have that option
 - A media player exposing MPRIS with album art (Spotify, browsers, mpv, etc.)
+
+The plugin stays idle until all of these hold, and its settings page says which one is missing.
 
 ## Installation
 
@@ -46,8 +49,8 @@ git clone https://github.com/felipeadeildo/dms-music-theme.git \
 
 ## Configuration
 
-- **Update Delay**: how long to let the album art color settle before retheming
-- **Palette**: matugen scheme used to build the full palette from the accent color
+- **Update Delay** sets how long the album art color has to settle before the theme changes.
+- **Palette** picks the matugen scheme that turns the accent into a full palette.
 
 ## License
 
