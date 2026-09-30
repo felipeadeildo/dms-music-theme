@@ -2,122 +2,95 @@ import QtQuick
 import qs.Common
 import qs.Services
 
+// Reseeds the dynamic theme from the album art accent while a track plays and
+// hands the theme back to DMS when it stops.
 Item {
     id: root
 
     property var pluginService: null
     property string pluginId: "musicTheme"
 
-    property int debounceMs: pluginService ? Number(pluginService.loadPluginData(pluginId, "debounceMs", 250)) : 250
-    property string schemeSetting: pluginService ? pluginService.loadPluginData(pluginId, "matugenScheme", "system") : "system"
+    property int debounceMs: 250
+    property string paletteSetting: "system"
 
-    property string _lastAppliedHex: ""
-    readonly property bool _wallpaperThemeActive: _lastAppliedHex === ""
+    // Last request sent to matugen; empty while DMS owns the theme.
+    property string appliedHex: ""
+    property string appliedScheme: ""
 
-    function _setDesired(kind, value) {
-        Theme.setDesiredTheme(kind, value, root._isLight(), root._iconTheme(), root._matugenType());
+    readonly property var player: MprisController.activePlayer
+    readonly property bool active: requirements.met && MediaAccentService.hasAccent && !!player && player.isPlaying
+
+    readonly property string wantedHex: active ? toHex(MediaAccentService.accent) : ""
+    readonly property string wantedScheme: paletteSetting !== "system" ? paletteSetting : (SettingsData.matugenScheme || "scheme-tonal-spot")
+    // Seed of the palette on screen. When DMS regenerates on its own (wallpaper,
+    // light mode, scheme) this stops matching wantedHex and the accent goes back on.
+    readonly property string shownHex: String(Theme.getMatugenColor("source_color", "")).toLowerCase()
+
+    onWantedHexChanged: syncTimer.restart()
+    onWantedSchemeChanged: syncTimer.restart()
+    onShownHexChanged: syncTimer.restart()
+
+    function toHex(color) {
+        const channel = value => Math.round(value * 255).toString(16).padStart(2, "0");
+        return "#" + channel(color.r) + channel(color.g) + channel(color.b);
     }
 
-    function _colorToHex(c) {
-        const r = Math.round(c.r * 255).toString(16).padStart(2, "0");
-        const g = Math.round(c.g * 255).toString(16).padStart(2, "0");
-        const b = Math.round(c.b * 255).toString(16).padStart(2, "0");
-        return "#" + r + g + b;
-    }
-
-    function _iconTheme() {
-        return (typeof SettingsData !== "undefined" && SettingsData.iconTheme) ? SettingsData.iconTheme : "System Default";
-    }
-
-    function _matugenType() {
-        if (root.schemeSetting && root.schemeSetting !== "system")
-            return root.schemeSetting;
-        return (typeof SettingsData !== "undefined" && SettingsData.matugenScheme) ? SettingsData.matugenScheme : "scheme-tonal-spot";
-    }
-
-    function _isLight() {
-        return typeof SessionData !== "undefined" ? SessionData.isLightMode : false;
-    }
-
-    function applyAccent() {
-        if (!MprisController.activePlayer || !MprisController.activePlayer.isPlaying)
+    function sync() {
+        if (!wantedHex) {
+            if (appliedHex)
+                restore();
             return;
-        if (!MediaAccentService.hasAccent)
-            return;
+        }
 
-        const hex = root._colorToHex(MediaAccentService.accent);
-        if (hex === root._lastAppliedHex)
+        const sent = appliedHex === wantedHex && appliedScheme === wantedScheme;
+        if (sent && (shownHex === wantedHex || Theme.workerRunning))
             return;
 
-        root._lastAppliedHex = hex;
-        root._setDesired("hex", hex);
+        appliedHex = wantedHex;
+        appliedScheme = wantedScheme;
+        Theme.setDesiredTheme("hex", wantedHex, SessionData.isLightMode, SettingsData.iconTheme || "System Default", wantedScheme);
     }
 
-    function restoreWallpaperTheme() {
-        if (root._wallpaperThemeActive)
-            return;
-        if (!Theme.rawWallpaperPath)
-            return;
+    function restore() {
+        appliedHex = "";
+        appliedScheme = "";
+        Theme.generateSystemThemesFromCurrentTheme();
+    }
 
-        root._lastAppliedHex = "";
+    function loadSettings() {
+        if (!pluginService)
+            return;
+        debounceMs = Number(pluginService.loadPluginData(pluginId, "debounceMs", 250));
+        paletteSetting = pluginService.loadPluginData(pluginId, "matugenScheme", "system");
+    }
 
-        const kind = Theme.rawWallpaperPath.startsWith("#") ? "hex" : "image";
-        root._setDesired(kind, Theme.rawWallpaperPath);
+    Requirements {
+        id: requirements
     }
 
     Timer {
-        id: debounceTimer
+        id: syncTimer
         interval: root.debounceMs
-        repeat: false
-        onTriggered: root.applyAccent()
-    }
-
-    Connections {
-        target: MediaAccentService
-        function onAccentChanged() {
-            debounceTimer.restart();
-        }
-    }
-
-    Connections {
-        target: MprisController
-        function onActivePlayerChanged() {
-            debounceTimer.restart();
-        }
-    }
-
-    Connections {
-        target: MprisController.activePlayer
-        ignoreUnknownSignals: true
-        function onIsPlayingChanged() {
-            if (MprisController.activePlayer && MprisController.activePlayer.isPlaying)
-                debounceTimer.restart();
-            else
-                root.restoreWallpaperTheme();
-        }
+        onTriggered: root.sync()
     }
 
     Connections {
         target: root.pluginService
         function onPluginDataChanged(changedPluginId) {
-            if (changedPluginId !== root.pluginId)
-                return;
-            const previousScheme = root.schemeSetting;
-            root.debounceMs = Number(root.pluginService.loadPluginData(root.pluginId, "debounceMs", 250));
-            root.schemeSetting = root.pluginService.loadPluginData(root.pluginId, "matugenScheme", "system");
-            if (root.schemeSetting !== previousScheme) {
-                root._lastAppliedHex = "";
-                root.applyAccent();
-            }
+            if (changedPluginId === root.pluginId)
+                root.loadSettings();
         }
     }
 
+    onPluginServiceChanged: loadSettings()
+
     Component.onCompleted: {
-        console.info("MusicTheme: daemon started");
-        root.applyAccent();
+        loadSettings();
+        syncTimer.restart();
     }
 
     Component.onDestruction: {
-        restoreWallpaperTheme();
+        if (appliedHex)
+            restore();
     }
 }
