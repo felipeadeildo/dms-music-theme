@@ -1,0 +1,107 @@
+{
+  "After 1 minute": {
+    "After 1 minute": "Depois de 1 minuto"
+  },
+  "After 10 seconds": {
+    "After 10 seconds": "Depois de 10 segundos"
+  },
+  "After 30 seconds": {
+    "After 30 seconds": "Depois de 30 segundos"
+  },
+  "After 5 minutes": {
+    "After 5 minutes": "Depois de 5 minutos"
+  },
+  "Applying…": {
+    "Applying…": "Aplicando…"
+  },
+  "Fast (100 ms)": {
+    "Fast (100 ms)": "Rápido (100 ms)"
+  },
+  "How long the album art color has to settle before the theme changes": {
+    "How long the album art color has to settle before the theme changes": "Quanto tempo a cor da capa precisa ficar estável antes de o tema mudar"
+  },
+  "How long the album colors stay after a pause before DMS takes the theme back": {
+    "How long the album colors stay after a pause before DMS takes the theme back": "Quanto tempo as cores do álbum ficam depois de uma pausa antes de o DMS retomar o tema"
+  },
+  "Immediately": {
+    "Immediately": "Imediatamente"
+  },
+  "Music Theme is off.": {
+    "Music Theme is off.": "O Music Theme está desligado."
+  },
+  "Normal (250 ms)": {
+    "Normal (250 ms)": "Normal (250 ms)"
+  },
+  "Not theming: DMS cannot run matugen.": {
+    "Not theming: DMS cannot run matugen.": "Sem tema: o DMS não consegue rodar o matugen."
+  },
+  "Not theming: DMS is not on the Dynamic theme.": {
+    "Not theming: DMS is not on the Dynamic theme.": "Sem tema: o DMS não está no tema Dinâmico."
+  },
+  "Not theming: a custom derived color overrides the album art.": {
+    "Not theming: a custom derived color overrides the album art.": "Sem tema: uma cor derivada personalizada substitui a capa do álbum."
+  },
+  "Not theming: the media player's album art accent is off.": {
+    "Not theming: the media player's album art accent is off.": "Sem tema: o destaque da arte do álbum está desligado no player de mídia."
+  },
+  "Nothing playing": {
+    "Nothing playing": "Nada tocando"
+  },
+  "Palette": {
+    "Palette": "Paleta"
+  },
+  "Play a track to preview its cover.": {
+    "Play a track to preview its cover.": "Toque uma faixa para ver a prévia da capa."
+  },
+  "Playback stopped. The album colors stay until the player closes.": {
+    "Playback stopped. The album colors stay until the player closes.": "Reprodução parada. As cores do álbum ficam até o player fechar."
+  },
+  "Playback stopped. The wallpaper colors come back in %1.": {
+    "Playback stopped. The wallpaper colors come back in %1.": "Reprodução parada. As cores do wallpaper voltam em %1."
+  },
+  "Remove override": {
+    "Remove override": "Remover substituição"
+  },
+  "Slow (600 ms)": {
+    "Slow (600 ms)": "Lento (600 ms)"
+  },
+  "System": {
+    "System": "Sistema"
+  },
+  "System follows the DMS palette, now %1.": {
+    "System follows the DMS palette, now %1.": "Sistema segue a paleta do DMS, agora %1."
+  },
+  "Theming from this cover.": {
+    "Theming from this cover.": "Tema vindo desta capa."
+  },
+  "This cover has no strong color, so it gets a neutral theme.": {
+    "This cover has no strong color, so it gets a neutral theme.": "Esta capa não tem uma cor forte, então recebe um tema neutro."
+  },
+  "This track has no album art.": {
+    "This track has no album art.": "Esta faixa não tem capa."
+  },
+  "Turn on": {
+    "Turn on": "Ativar"
+  },
+  "Update delay": {
+    "Update delay": "Atraso da atualização"
+  },
+  "Use Dynamic": {
+    "Use Dynamic": "Usar Dinâmico"
+  },
+  "Waiting for a media player.": {
+    "Waiting for a media player.": "Esperando um player de mídia."
+  },
+  "Waiting for playback.": {
+    "Waiting for playback.": "Esperando a reprodução."
+  },
+  "Waiting for this track's album art.": {
+    "Waiting for this track's album art.": "Esperando a capa desta faixa."
+  },
+  "When playback stops": {
+    "When playback stops": "Quando a reprodução para"
+  },
+  "When the player closes": {
+    "When the player closes": "Quando o player fechar"
+  }
+}

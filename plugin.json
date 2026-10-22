@@ -9,8 +9,8 @@
     "component": "./MusicThemeDaemon.qml",
     "icon": "palette",
     "settings": "./MusicThemeSettings.qml",
-    "requires_dms": ">=1.5.0",
-    "requires": ["dms"],
+    "requires_dms": ">=2.0.0",
+    "dependencies": ["matugen"],
     "permissions": [
         "settings_read",
         "settings_write"
