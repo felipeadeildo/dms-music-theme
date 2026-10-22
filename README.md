@@ -3,19 +3,9 @@
 A [Dux Shell (DMS)](https://github.com/duxlabs-dev/dux-shell) plugin that themes your system from the album art of the track that is playing. The shell, GTK and Qt apps, terminals and editors follow the cover, and your wallpaper stays as it is.
 
 <div align="center">
-  <img src="assets/screenshot.png" alt="Music Theme plugin in DMS Settings">
+  <img src="assets/screenshot.png" width="49%" alt="Shell, bar and terminal in green, from the cover of Solas (Raban's Version)">
+  <img src="assets/screenshot-2.png" width="49%" alt="The same desktop in red, from the cover of Ofelia by Juan Arenosa">
 </div>
-
-<details>
-<summary>More screenshots</summary>
-<br>
-<div align="center">
-  <img src="assets/screenshot-2.png" width="45%" alt="Theme matching a blue album cover">
-  <img src="assets/screenshot-3.png" width="45%" alt="Theme matching a purple album cover">
-  <br>
-  <img src="assets/screenshot-4.png" width="45%" alt="Theme matching another blue album cover">
-</div>
-</details>
 
 ## Features
 
